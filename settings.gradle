@@ -1,1 +1,6 @@
 rootProject.name = 'task-tracker'
+
+include 'task-tracker-backend'
+include 'task-tracker-scheduler'
+include 'task-tracker-email-sender'
+include 'task-tracker-summarization-service'
