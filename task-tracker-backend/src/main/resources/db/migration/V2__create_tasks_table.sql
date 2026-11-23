@@ -1,0 +1,13 @@
+CREATE TABLE tasks
+(
+    task_id BIGINT GENERATED ALWAYS AS IDENTITY,
+    title VARCHAR(250) NOT NULL,
+    description VARCHAR(2000),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    completed BOOLEAN NOT NULL DEFAULT FALSE,
+    completed_at TIMESTAMP,
+    user_id BIGINT NOT NULL,
+
+    CONSTRAINT tasks_pk PRIMARY KEY (task_id),
+    CONSTRAINT tasks_fk FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
+)
