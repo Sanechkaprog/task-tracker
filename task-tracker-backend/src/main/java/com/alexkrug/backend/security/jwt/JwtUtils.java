@@ -1,6 +1,5 @@
 package com.alexkrug.backend.security.jwt;
 
-import com.alexkrug.backend.security.UserSecurity;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
@@ -28,12 +27,15 @@ public class JwtUtils {
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
-        UserSecurity userSecurity = (UserSecurity) authentication.getPrincipal();
-        if (userSecurity == null) {
-            throw new IllegalStateException("No principals");
+        Object principal = authentication.getPrincipal();
+        if (principal == null) {
+            throw new IllegalArgumentException("No principals");
         }
+
+        String username = principal.toString();
+
         return Jwts.builder()
-                .setSubject(userSecurity.getUsername())
+                .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + jwtExpirationMs))
                 .signWith(key(), SignatureAlgorithm.HS256)
