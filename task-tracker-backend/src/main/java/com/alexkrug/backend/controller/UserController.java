@@ -2,7 +2,7 @@ package com.alexkrug.backend.controller;
 
 import com.alexkrug.backend.domain.User;
 import com.alexkrug.backend.dto.CredentialsRequest;
-import com.alexkrug.backend.dto.SuccessRegistrationResponse;
+import com.alexkrug.backend.dto.SuccessJwtResponse;
 import com.alexkrug.backend.dto.UserDto;
 import com.alexkrug.backend.exception.UserAlreadyRegisteredException;
 import com.alexkrug.backend.mapper.ServiceMapper;
@@ -36,7 +36,7 @@ public class UserController {
     private final UserService userService;
     private final ServiceMapper serviceMapper;
     @PostMapping
-    public ResponseEntity<SuccessRegistrationResponse> signUp(@RequestBody CredentialsRequest credentials) {
+    public ResponseEntity<SuccessJwtResponse> signUp(@RequestBody CredentialsRequest credentials) {
         String username = credentials.username();
         String password = credentials.password();
         String email = credentials.email();
@@ -69,7 +69,7 @@ public class UserController {
         return ResponseEntity
                 .ok()
                 .header(HttpHeaders.SET_COOKIE, cookie.toString())
-                .body(new SuccessRegistrationResponse(token));
+                .body(new SuccessJwtResponse(token));
     }
 
     @GetMapping
