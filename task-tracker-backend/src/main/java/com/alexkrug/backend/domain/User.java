@@ -7,10 +7,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.validation.constraints.Email;
+import lombok.*;
+
 import java.util.List;
 
 @Entity
@@ -19,6 +18,7 @@ import java.util.List;
 @AllArgsConstructor
 @Setter
 @Getter
+@ToString(exclude = "tasks")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,6 +31,17 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false, unique = true)
+    @Email
+    private String email;
+
     @OneToMany(mappedBy = "user")
     private List<Task> tasks;
+
+    public User (String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
+
 }

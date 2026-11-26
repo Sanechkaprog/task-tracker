@@ -1,5 +1,6 @@
 package com.alexkrug.backend.security.jwt;
 
+import com.alexkrug.backend.domain.User;
 import com.alexkrug.backend.security.UserSecurity;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -8,6 +9,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -18,22 +20,33 @@ import java.util.Date;
 
 @Component
 @Slf4j
-@PropertySource("classpath:jwt.properties")
+@Getter
 public class JwtUtils {
 
-    @Value("${app.jwt.secret}")
+    @Value("${APP_JWT_SECRET}")
     private String jwtSecret;
 
-    @Value("${app.jwt.expirationMs}")
+    @Value("${APP_JWT_EXPIRATION_MS}")
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
-        UserSecurity userSecurity = (UserSecurity) authentication.getPrincipal();
-        if (userSecurity == null) {
-            throw new IllegalStateException("No principals");
+        Object principal = authentication.getPrincipal();
+        String username;
+
+        if (principal == null) {
+            throw new IllegalArgumentException("No principals");
         }
+
+        if (principal instanceof UserSecurity userSecurity) {
+            username = userSecurity.getUsername();
+        } else {
+            throw new RuntimeException("Principals wrong type");
+        }
+
+
+
         return Jwts.builder()
-                .setSubject(userSecurity.getUsername())
+                .setSubject(username)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + jwtExpirationMs))
                 .signWith(key(), SignatureAlgorithm.HS256)

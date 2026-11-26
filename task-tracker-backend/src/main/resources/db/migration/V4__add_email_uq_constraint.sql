@@ -1,0 +1,2 @@
+ALTER TABLE users
+ADD CONSTRAINT email_uq UNIQUE (email)

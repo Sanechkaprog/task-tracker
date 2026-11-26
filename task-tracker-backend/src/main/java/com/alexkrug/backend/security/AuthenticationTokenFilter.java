@@ -3,6 +3,7 @@ package com.alexkrug.backend.security;
 import com.alexkrug.backend.security.jwt.JwtUtils;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +15,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Optional;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,6 +27,7 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
 
     private final JwtUtils jwtUtils;
     private final UserDetailsService userDetailsService;
+    private final String cookieJwt = "jwt";
 
     @Override
     @NullMarked
@@ -53,11 +56,19 @@ public class AuthenticationTokenFilter extends OncePerRequestFilter {
     }
 
     private String parseJwt(HttpServletRequest request) {
-        String headerAuth = request.getHeader("Authorization");
-        String prefix = "Bearer ";
-        if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(prefix)) {
-            return headerAuth.substring(prefix.length());
+        Cookie[] cookies = request.getCookies();
+        if (cookies == null || cookies.length == 0) {
+            return null;
         }
-        return null;
+        Optional<Cookie> jwtCookieOptional = Arrays.stream(cookies)
+                .filter(cookie -> cookieJwt.equals(cookie.getName()))
+                .findAny();
+        if (jwtCookieOptional.isEmpty()) {
+            return null;
+        }
+
+        Cookie jwtCookie = jwtCookieOptional.get();
+
+        return jwtCookie.getValue();
     }
 }
