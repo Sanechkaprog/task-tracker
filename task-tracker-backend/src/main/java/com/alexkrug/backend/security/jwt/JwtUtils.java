@@ -21,23 +21,28 @@ import java.util.Date;
 @Component
 @Slf4j
 @Getter
-@PropertySource("classpath:jwt.properties")
 public class JwtUtils {
 
-    @Value("${app.jwt.secret}")
+    @Value("${APP_JWT_SECRET}")
     private String jwtSecret;
 
-    @Value("${app.jwt.expirationMs}")
+    @Value("${APP_JWT_EXPIRATION_MS}")
     private int jwtExpirationMs;
 
     public String generateJwtToken(Authentication authentication) {
-        UserSecurity principal = (UserSecurity) authentication.getPrincipal();
+        Object principal = authentication.getPrincipal();
+        String username;
 
         if (principal == null) {
             throw new IllegalArgumentException("No principals");
         }
 
-        String username = principal.getUsername();
+        if (principal instanceof UserSecurity userSecurity) {
+            username = userSecurity.getUsername();
+        } else {
+            throw new RuntimeException("Principals wrong type");
+        }
+
 
 
         return Jwts.builder()

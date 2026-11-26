@@ -18,6 +18,7 @@ services:
     container_name: task-tracker-broker
     ports:
       - "9092:9092"
+      - "9093:9093"
     networks:
       - task-tracker-net
     environment:
