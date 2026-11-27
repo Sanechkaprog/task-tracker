@@ -40,15 +40,21 @@ public class TaskService {
     public TaskDto editTask(Long taskId, String username, TaskEditDto taskEditDto) {
         Optional<Task> optionalTask = taskRepository.findById(taskId);
         Task task = checkedTask(optionalTask, username, taskId);
-        task.setDescription(taskEditDto.description());
-        task.setTitle(taskEditDto.title());
-        if (taskEditDto.completed()) {
-            task.setCompleted(true);
-            task.setCompletedAt(LocalDateTime.now());
-        } else {
-            task.setCompleted(false);
-            task.setCompletedAt(null);
+        if (taskEditDto.title() != null) {
+            task.setTitle(taskEditDto.title());
         }
+        if (taskEditDto.description() != null) {
+            task.setDescription(taskEditDto.description());
+        }
+        if (taskEditDto.completed() != null) {
+            if (!task.getCompleted() && taskEditDto.completed()) {
+                task.setCompletedAt(LocalDateTime.now());
+            }
+            if (task.getCompleted() && !taskEditDto.completed()) {
+                task.setCompletedAt(null);
+            }
+        }
+        log.info("TASK EDITED");
         return serviceMapper.toTaskDto(task);
     }
 
@@ -56,6 +62,7 @@ public class TaskService {
         Optional<Task> optionalTask = taskRepository.findById(taskId);
         Task task = checkedTask(optionalTask, username, taskId);
         taskRepository.delete(task);
+        log.info("TASKS DELETED");
     }
 
     private Task checkedTask(Optional<Task> optionalTask, String username, Long taskId) {

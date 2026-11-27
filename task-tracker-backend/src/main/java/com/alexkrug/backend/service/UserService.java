@@ -1,12 +1,12 @@
 package com.alexkrug.backend.service;
 
-import com.alexkrug.backend.domain.Task;
 import com.alexkrug.backend.domain.User;
 import com.alexkrug.backend.dto.TaskDto;
 import com.alexkrug.backend.mapper.ServiceMapper;
 import com.alexkrug.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +16,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 @Transactional
+@Slf4j
 public class UserService {
     private final UserRepository userRepository;
     private final ServiceMapper serviceMapper;
@@ -26,10 +27,6 @@ public class UserService {
         return user.isPresent();
     }
 
-    public Optional<User> findUser(String username) {
-        return userRepository.findUserByUsername(username);
-    }
-
     public User getUser(String username) {
         return userRepository.getUserByUsername(username);
     }
@@ -37,6 +34,7 @@ public class UserService {
     public User saveUser(String username, String password, String email) {
         String encodedPassword = passwordEncoder.encode(password);
         User user = new User(username, encodedPassword, email);
+        log.info("USER SAVED");
         return userRepository.save(user);
 
     }

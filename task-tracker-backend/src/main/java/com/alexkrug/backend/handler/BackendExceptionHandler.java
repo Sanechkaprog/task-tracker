@@ -4,6 +4,7 @@ import com.alexkrug.backend.dto.ErrorResponse;
 import com.alexkrug.backend.exception.EmailExistException;
 import com.alexkrug.backend.exception.TaskNotExistException;
 import com.alexkrug.backend.exception.UserAlreadyRegisteredException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.security.core.AuthenticationException;
 import java.util.List;
 
+@Slf4j
 @RestControllerAdvice
 public class BackendExceptionHandler {
 
@@ -73,8 +75,9 @@ public class BackendExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> internalServerErrors(Exception ex) {
+        log.error(ex.getMessage());
         return new ResponseEntity<>(
-                new ErrorResponse(ex.getMessage()),
+                new ErrorResponse("Internal server error"),
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
