@@ -1,18 +1,24 @@
 package com.alexkrug.backend.service;
 
+import com.alexkrug.backend.domain.Task;
 import com.alexkrug.backend.domain.User;
+import com.alexkrug.backend.dto.TaskDto;
+import com.alexkrug.backend.mapper.ServiceMapper;
 import com.alexkrug.backend.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UserService {
     private final UserRepository userRepository;
-
+    private final ServiceMapper serviceMapper;
     private final PasswordEncoder passwordEncoder;
 
     public boolean isUserRegistered(String username) {
@@ -40,4 +46,12 @@ public class UserService {
         return user.isPresent();
     }
 
+    public List<TaskDto> getUserTasks(String username) {
+        User user =  userRepository.getByUsernameWithTasks(username);
+        return user.getTasks()
+                .stream()
+                .map(serviceMapper::toTaskDto)
+                .toList();
+
+    }
 }

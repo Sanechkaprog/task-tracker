@@ -2,6 +2,7 @@ package com.alexkrug.backend.handler;
 
 import com.alexkrug.backend.dto.ErrorResponse;
 import com.alexkrug.backend.exception.EmailExistException;
+import com.alexkrug.backend.exception.TaskNotExistException;
 import com.alexkrug.backend.exception.UserAlreadyRegisteredException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -39,6 +40,14 @@ public class BackendExceptionHandler {
         );
     }
 
+    @ExceptionHandler(TaskNotExistException.class)
+    public ResponseEntity<ErrorResponse> taskNotExist(TaskNotExistException ex) {
+        return new ResponseEntity<>(
+                new ErrorResponse(ex.getMessage()),
+                HttpStatus.NOT_FOUND
+        );
+    }
+
     @ExceptionHandler(EmailExistException.class)
     public ResponseEntity<ErrorResponse> registeredUser(EmailExistException ex) {
         return new ResponseEntity<>(
@@ -63,9 +72,9 @@ public class BackendExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> internalServerErrors() {
+    public ResponseEntity<ErrorResponse> internalServerErrors(Exception ex) {
         return new ResponseEntity<>(
-                new ErrorResponse("Internal server error"),
+                new ErrorResponse(ex.getMessage()),
                 HttpStatus.INTERNAL_SERVER_ERROR
         );
     }
