@@ -33,7 +33,7 @@ public class TaskController {
                 .body(userService.getUserTasks(username));
     }
 
-    @PostMapping("add")
+    @PostMapping()
     public ResponseEntity<TaskDto> saveTask(@Valid @AuthenticationPrincipal UserSecurity userSecurity, @Valid @RequestBody TaskCreationDto taskCreation) {
         String username = userSecurity.getUsername();
         User user = userService.getUser(username);
@@ -44,7 +44,7 @@ public class TaskController {
 
     }
 
-    @PatchMapping("edit/{id}")
+    @PatchMapping("{id}")
     public ResponseEntity<TaskDto> editTask(
             @PathVariable("id") Long taskId,
             @Valid @AuthenticationPrincipal UserSecurity userSecurity,
@@ -55,5 +55,18 @@ public class TaskController {
         return ResponseEntity
                 .ok()
                 .body(taskDto);
+    }
+
+    @DeleteMapping("{id}")
+    public ResponseEntity<HttpStatus> deleteTask(
+            @PathVariable("id") Long taskId,
+            @Valid @AuthenticationPrincipal UserSecurity userSecurity
+    ) {
+        String username = userSecurity.getUsername();
+        taskService.deleteTask(taskId, username);
+        return ResponseEntity
+                .status(HttpStatus.NO_CONTENT)
+                .build();
+
     }
 }

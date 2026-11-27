@@ -39,14 +39,7 @@ public class TaskService {
 
     public TaskDto editTask(Long taskId, String username, TaskEditDto taskEditDto) {
         Optional<Task> optionalTask = taskRepository.findById(taskId);
-        if (optionalTask.isEmpty()) {
-            throw new TaskNotExistException("Task with %d id not found".formatted(taskId));
-        }
-        Task task = optionalTask.get();
-        String taskBelongTo = task.getUser().getUsername();
-        if (!taskBelongTo.equals(username)) {
-            throw new TaskNotExistException("Task with %d id not found".formatted(taskId));
-        }
+        Task task = checkedTask(optionalTask, username, taskId);
         task.setDescription(taskEditDto.description());
         task.setTitle(taskEditDto.title());
         if (taskEditDto.completed()) {
@@ -58,4 +51,24 @@ public class TaskService {
         }
         return serviceMapper.toTaskDto(task);
     }
+
+    public void deleteTask(Long taskId, String username) {
+        Optional<Task> optionalTask = taskRepository.findById(taskId);
+        Task task = checkedTask(optionalTask, username, taskId);
+        taskRepository.delete(task);
+    }
+
+    private Task checkedTask(Optional<Task> optionalTask, String username, Long taskId) {
+        if (optionalTask.isEmpty()) {
+            throw new TaskNotExistException("Task with %d id not found".formatted(taskId));
+        }
+        Task task = optionalTask.get();
+        String taskBelongTo = task.getUser().getUsername();
+        if (!taskBelongTo.equals(username)) {
+            throw new TaskNotExistException("Task with %d id not found".formatted(taskId));
+        }
+        return task;
+    }
+
+
 }
