@@ -2,8 +2,8 @@ package com.alexkrug.backend.mapper;
 
 import com.alexkrug.backend.domain.Task;
 import com.alexkrug.backend.domain.User;
-import com.alexkrug.backend.dto.TaskDto;
-import com.alexkrug.backend.dto.UserDto;
+import com.alexkrug.backend.dto.response.TaskDto;
+import com.alexkrug.backend.dto.request.UserDto;
 import org.mapstruct.Mapper;
 
 

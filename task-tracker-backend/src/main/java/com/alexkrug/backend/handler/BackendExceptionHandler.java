@@ -1,6 +1,6 @@
 package com.alexkrug.backend.handler;
 
-import com.alexkrug.backend.dto.ErrorResponse;
+import com.alexkrug.backend.dto.response.ErrorResponse;
 import com.alexkrug.backend.exception.EmailExistException;
 import com.alexkrug.backend.exception.TaskNotExistException;
 import com.alexkrug.backend.exception.UserAlreadyRegisteredException;

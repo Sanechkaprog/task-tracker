@@ -1,9 +1,9 @@
 package com.alexkrug.backend.controller;
 
 import com.alexkrug.backend.domain.User;
-import com.alexkrug.backend.dto.CredentialsRequest;
-import com.alexkrug.backend.dto.SuccessJwtResponse;
-import com.alexkrug.backend.dto.UserDto;
+import com.alexkrug.backend.dto.request.CredentialsRequest;
+import com.alexkrug.backend.dto.response.SuccessJwtResponse;
+import com.alexkrug.backend.dto.request.UserDto;
 import com.alexkrug.backend.exception.EmailExistException;
 import com.alexkrug.backend.exception.UserAlreadyRegisteredException;
 import com.alexkrug.backend.mapper.ServiceMapper;

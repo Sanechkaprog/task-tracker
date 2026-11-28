@@ -2,9 +2,9 @@ package com.alexkrug.backend.service;
 
 import com.alexkrug.backend.domain.Task;
 import com.alexkrug.backend.domain.User;
-import com.alexkrug.backend.dto.TaskCreationDto;
-import com.alexkrug.backend.dto.TaskDto;
-import com.alexkrug.backend.dto.TaskEditDto;
+import com.alexkrug.backend.dto.request.TaskCreationDto;
+import com.alexkrug.backend.dto.response.TaskDto;
+import com.alexkrug.backend.dto.request.TaskEditDto;
 import com.alexkrug.backend.exception.TaskNotExistException;
 import com.alexkrug.backend.mapper.ServiceMapper;
 import com.alexkrug.backend.repository.TaskRepository;

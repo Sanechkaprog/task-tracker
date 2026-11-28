@@ -1,4 +1,4 @@
-package com.alexkrug.backend.dto;
+package com.alexkrug.backend.dto.response;
 
 public record SuccessJwtResponse(
         String jwtToken

@@ -1,4 +1,4 @@
-package com.alexkrug.backend.dto;
+package com.alexkrug.backend.dto.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

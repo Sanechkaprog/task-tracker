@@ -1,7 +1,7 @@
 package com.alexkrug.backend.controller;
 
-import com.alexkrug.backend.dto.AuthRequest;
-import com.alexkrug.backend.dto.SuccessJwtResponse;
+import com.alexkrug.backend.dto.request.AuthRequest;
+import com.alexkrug.backend.dto.response.SuccessJwtResponse;
 import com.alexkrug.backend.security.jwt.JwtUtils;
 import com.alexkrug.backend.service.UserService;
 import jakarta.validation.Valid;

@@ -1,7 +1,8 @@
 package com.alexkrug.backend.service;
 
 import com.alexkrug.backend.domain.User;
-import com.alexkrug.backend.dto.TaskDto;
+import com.alexkrug.backend.dto.response.TaskDto;
+import com.alexkrug.backend.kafka.EmailKafkaProducer;
 import com.alexkrug.backend.mapper.ServiceMapper;
 import com.alexkrug.backend.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -9,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -21,6 +21,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final ServiceMapper serviceMapper;
     private final PasswordEncoder passwordEncoder;
+    private final EmailKafkaProducer kafkaProducer;
 
     public boolean isUserRegistered(String username) {
         Optional<User> user = userRepository.findUserByUsername(username);
@@ -34,9 +35,10 @@ public class UserService {
     public User saveUser(String username, String password, String email) {
         String encodedPassword = passwordEncoder.encode(password);
         User user = new User(username, encodedPassword, email);
+        User savedUser = userRepository.save(user);
         log.info("USER SAVED");
-        return userRepository.save(user);
-
+        kafkaProducer.sendWelcomeEmailTo(savedUser.getEmail());
+        return savedUser;
     }
 
     public boolean isEmailExist(String email) {

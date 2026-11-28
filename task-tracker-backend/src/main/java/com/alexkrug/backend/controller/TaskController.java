@@ -1,9 +1,9 @@
 package com.alexkrug.backend.controller;
 
 import com.alexkrug.backend.domain.User;
-import com.alexkrug.backend.dto.TaskCreationDto;
-import com.alexkrug.backend.dto.TaskDto;
-import com.alexkrug.backend.dto.TaskEditDto;
+import com.alexkrug.backend.dto.request.TaskCreationDto;
+import com.alexkrug.backend.dto.response.TaskDto;
+import com.alexkrug.backend.dto.request.TaskEditDto;
 import com.alexkrug.backend.security.UserSecurity;
 import com.alexkrug.backend.service.TaskService;
 import com.alexkrug.backend.service.UserService;
